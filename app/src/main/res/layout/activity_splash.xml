@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- অ্যাপ লোগো -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/ddalogo"
+        android:contentDescription="App Logo" />
+
+    <!-- ইংরেজি স্লোগান -->
+    <TextView
+        android:id="@+id/engText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Darsud Deen Academy"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_below="@id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="#4CAF50"/>
+
+    <!-- বাংলা স্লোগান -->
+    <TextView
+        android:id="@+id/bnText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:fontFamily="@font/siiib"
+        android:text="দারসুদ দ্বীন একাডেমিতে \n আপনাকে স্বাগতম"
+        android:textSize="35sp"
+        android:layout_below="@id/engText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textColor="#FF9800"/>
+</RelativeLayout>
