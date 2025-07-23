@@ -12,27 +12,27 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
-import com.darsuddeen.academy.databinding.ActivityMainBinding
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.darsuddeen.academy.databinding.FragmentHomeBinding
 
-class MainActivity : AppCompatActivity() {
+class HomeFragment : Fragment() {
 
-    private lateinit var binding: ActivityMainBinding
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     @SuppressLint("SetJavaScriptEnabled")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        supportActionBar?.hide() // Hide default action bar
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // সাদা ব্যাকগ্রাউন্ড রাখো যেন কালো স্ক্রিন না আসে
-        binding.root.setBackgroundColor(android.graphics.Color.WHITE)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         val webView = binding.webview
         val progressBar = binding.progressBar
 
-        // ✅ WebView সেটিংস
+        // Enable JavaScript and other settings
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
         webSettings.domStorageEnabled = true
@@ -43,14 +43,10 @@ class MainActivity : AppCompatActivity() {
 
         webView.webChromeClient = WebChromeClient()
 
-        // ✅ WebViewClient সহ Error & JavaScript Injection
+        // Handle WebView loading and errors
         webView.webViewClient = object : WebViewClient() {
-
             override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
                 progressBar.visibility = View.GONE
-
-
             }
 
             override fun onReceivedError(
@@ -65,32 +61,39 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Load URL
+        // Load website or error page
         if (isInternetAvailable()) {
             webView.loadUrl("https://darsuddeenacademy.com")
         } else {
             webView.loadUrl("file:///android_asset/error.html")
         }
 
-        // ✅ Back Press হ্যান্ডেল
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+        // Handle back press
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (webView.canGoBack()) {
                     webView.goBack()
                 } else {
-                    finish()
+                    requireActivity().finish()
                 }
             }
         })
+
+        return binding.root
     }
 
-    // ✅ ইন্টারনেট চেকার ফাংশন
+    // Check internet availability
     private fun isInternetAvailable(): Boolean {
         val connectivityManager =
-            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities =
             connectivityManager.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding=null
         }
 }

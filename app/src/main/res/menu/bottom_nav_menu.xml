@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/menu_books"
+        android:icon="@drawable/baseline_menu_book_24"
+        android:title="Books" />
+
+    <item
+        android:id="@+id/menu_videos"
+        android:icon="@drawable/outline_10k_24"
+        android:title="Videos" />
+
+    <item
+        android:id="@+id/menu_dashboard"
+        android:icon="@drawable/outline_24fps_select_24"
+        android:title="Dashboard"/>
+
+</menu>

@@ -13,11 +13,14 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Hide the default action bar
         supportActionBar?.hide()
 
+        // Bind the splash layout
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Delay 3 seconds, then move to MainActivity
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
             finish()
