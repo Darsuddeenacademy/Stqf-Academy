@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
                 // 1. VideoClassFragment WebView
                 if (currentFragment is VideoClassFragment) {
-                    val webView = currentFragment.view?.findViewById<WebView>(R.id.videoWebView)
+                    val webView = currentFragment.view?.findViewById<WebView>(R.id.videoTitle)
                     if (webView != null && webView.canGoBack()) {
                         webView.goBack()
                         return

@@ -1,50 +1,53 @@
 package com.darsuddeen.academy
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import com.darsuddeen.academy.databinding.FragmentVideosBinding
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class VideoClassFragment : Fragment() {
 
-    // ViewBinding object for fragment_videos.xml
-    private var _binding: FragmentVideosBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: VideoAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate layout using ViewBinding
-        _binding = FragmentVideosBinding.inflate(inflater, container, false)
+    private val videoList = listOf(
+        VideoModel(
+            "কায়দা থেকে কুরআন মাজীদ শিক্ষা",
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdcpwNcQlcOqeMDo-C9ItSlx&si=nJJNg1anh4fesO8J"
+        ),
 
-        // Reference to the WebView from binding
-        val webView: WebView = binding.videoWebView
+        VideoModel(
+            "নামাজের অর্থ ও মর্মার্থ বুঝে নামাজ শিক্ষা",
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdctUJK5H4VI694gtM5md_OC&si=dA1O06SiAxgcKL_e"
+        ),
+        VideoModel(
+            "শুদ্ধভাবে সূরা শিখি ( Darsud Deen Academy )",
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdfYT_UKpdhjOKwSzLceNaSy&si=cuT88yQXSezGyl29"
+        )
 
-        // Enable WebView settings
-        val webSettings: WebSettings = webView.settings
-        webSettings.javaScriptEnabled = true
-        webSettings.domStorageEnabled = true
-        webSettings.mediaPlaybackRequiresUserGesture = false
+        //
+    )
 
-        // Set WebView clients
-        webView.webChromeClient = WebChromeClient()
-        webView.webViewClient = WebViewClient()
-
-        // Load your YouTube playlist or video
-        webView.loadUrl("https://youtube.com/playlist?list=PLdZH8A1MbXdcpwNcQlcOqeMDo-C9ItSlx&si=kn7zGWvmFhEpE1ac")
-
-        return binding.root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_videos, container, false)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null // Avoid memoryleaks
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerView = view.findViewById(R.id.videoRecyclerView)
+        recyclerView.setHasFixedSize(true)
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        adapter = VideoAdapter(videoList) { video ->
+            val intent = Intent(requireContext(), OpenVideoListActivity::class.java)
+            intent.putExtra("playlist_url", video.playlistUrl)
+            startActivity(intent)
         }
+
+        recyclerView.adapter = adapter
+    }
 }
