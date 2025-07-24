@@ -58,16 +58,7 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
 
-                // 1. VideoClassFragment WebView
-                if (currentFragment is VideoClassFragment) {
-                    val webView = currentFragment.view?.findViewById<WebView>(R.id.videoTitle)
-                    if (webView != null && webView.canGoBack()) {
-                        webView.goBack()
-                        return
-                    }
-                }
-
-                // 2. HomeFragment WebView
+                // 1. If currently in HomeFragment and WebView can go back
                 if (currentFragment is HomeFragment) {
                     val webView = currentFragment.view?.findViewById<WebView>(R.id.webview)
                     if (webView != null && webView.canGoBack()) {
@@ -75,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    // No more back in WebView — Show toast
+                    // If can't go back in WebView
                     if (doubleBackToExitPressedOnce) {
                         finish()
                     } else {
@@ -92,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
 
-                // 3. From any other fragment → go to HomeFragment
+                // 2. From any other fragment (Books, Videos, Dashboard), go to HomeFragment first
                 if (!isNowOnHome) {
                     isNowOnHome = true
                     loadFragment(HomeFragment())
@@ -114,5 +105,5 @@ class MainActivity : AppCompatActivity() {
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        }
+    }
 }

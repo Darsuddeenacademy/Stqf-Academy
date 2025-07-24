@@ -7,40 +7,47 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.darsuddeen.academy.databinding.FragmentVideosBinding
 
 class VideoClassFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    private var _binding: FragmentVideosBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var adapter: VideoAdapter
 
     private val videoList = listOf(
         VideoModel(
             "কায়দা থেকে কুরআন মাজীদ শিক্ষা",
-            "https://youtube.com/playlist?list=PLdZH8A1MbXdcpwNcQlcOqeMDo-C9ItSlx&si=nJJNg1anh4fesO8J"
-        ),
-
-        VideoModel(
-            "নামাজের অর্থ ও মর্মার্থ বুঝে নামাজ শিক্ষা",
-            "https://youtube.com/playlist?list=PLdZH8A1MbXdctUJK5H4VI694gtM5md_OC&si=dA1O06SiAxgcKL_e"
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdcpwNcQlcOqeMDo-C9ItSlx",
+            R.drawable.playlist_tb11
         ),
         VideoModel(
             "শুদ্ধভাবে সূরা শিখি ( Darsud Deen Academy )",
-            "https://youtube.com/playlist?list=PLdZH8A1MbXdfYT_UKpdhjOKwSzLceNaSy&si=cuT88yQXSezGyl29"
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdctUJK5H4VI694gtM5md_OC",
+            R.drawable.playlist_tb33
+        ),
+        VideoModel(
+            "নামাজের অর্থ ও মর্মার্থ বুঝে নামাজ শিক্ষা",
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdfYT_UKpdhjOKwSzLceNaSy",
+            R.drawable.playlist_tb22
+
+
         )
 
-        //
     )
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_videos, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentVideosBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView = view.findViewById(R.id.videoRecyclerView)
-        recyclerView.setHasFixedSize(true)
-
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.videoRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         adapter = VideoAdapter(videoList) { video ->
             val intent = Intent(requireContext(), OpenVideoListActivity::class.java)
@@ -48,6 +55,11 @@ class VideoClassFragment : Fragment() {
             startActivity(intent)
         }
 
-        recyclerView.adapter = adapter
+        binding.videoRecyclerView.adapter = adapter
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding=null
+        }
 }
