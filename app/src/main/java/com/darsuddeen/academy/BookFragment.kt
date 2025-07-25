@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.darsuddeen.academy.databinding.FragmentBookBinding
-
 
 class BookFragment : Fragment() {
 
@@ -27,23 +26,23 @@ class BookFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Static book list from assets
+        // Static book list from assets (if you have thumbnails, we'll add later)
         val bookList = listOf(
-            Book("Book 1", "Book1.pdf"),
-            Book("Book 2", "Book2.pdf"),
-            Book("Book 3", "Book3.pdf"),
-            Book("Book 4", "Book4.pdf"),
-            Book("Book 5", "Book5.pdf")
+            BookModel("DDA সহজ কুরআন শিক্ষা কায়দা", "Book1.pdf"),
+            BookModel("DDA ইসলাম শিক্ষা", "Book2.pdf"),
+            BookModel("কুরআনের ৫০০ শব্দ", "Book3.pdf"),
+            BookModel("৫০০ শব্দের অনুশীলনী", "Book4.pdf"),
+            BookModel("Everyday English", "Book5.pdf")
         )
 
-        // Setup RecyclerView
+        // ✅ Grid layout with 2 columns
         adapter = BookAdapter(requireContext(), bookList)
-        binding.booksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.booksRecyclerView.adapter = adapter
+        binding.bookRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.bookRecyclerView.adapter = adapter
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
-        }
+        _binding = null
+    }
 }
