@@ -1,6 +1,10 @@
 package com.darsuddeen.academy.Activity
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
@@ -19,20 +23,36 @@ class OpenVideoListActivity : AppCompatActivity() {
         val playlistUrl = intent.getStringExtra("playlist_url")
 
         webView.settings.javaScriptEnabled = true
+        webView.settings.mediaPlaybackRequiresUserGesture = false
         webView.webViewClient = WebViewClient()
-        playlistUrl?.let {
-            webView.loadUrl(it)
+        webView.webChromeClient = WebChromeClient()
+
+        if (isInternetAvailable(this)) {
+            playlistUrl?.let {
+                webView.loadUrl(it)
+            }
+        } else {
+            webView.loadUrl("file:///android_asset/error.html")
         }
 
-        // Handle back press for WebView history
+        // WebView back navigation
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (webView.canGoBack()) {
-                    webView.goBack() // go to previous video in playlist
+                    webView.goBack()
                 } else {
-                    finish() // exit activity and return to RecyclerView
+                    finish()
                 }
             }
-            })
+        })
+    }
+
+    // ✅ HomeFragment-style internet check
+    private fun isInternetAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         }
 }

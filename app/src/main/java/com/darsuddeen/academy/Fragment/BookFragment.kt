@@ -33,6 +33,7 @@ class BookFragment : Fragment() {
         val bookList = listOf(
             BookModel("DDA সহজ কুরআন শিক্ষা কায়দা", "Book1.pdf"),
             BookModel("DDA ইসলাম শিক্ষা", "Book2.pdf"),
+            BookModel("Hafizi Quran","book_6.pdf"),
             BookModel("কুরআনের ৫০০ শব্দ", "Book3.pdf"),
             BookModel("৫০০ শব্দের অনুশীলনী", "Book4.pdf"),
             BookModel("Everyday English", "Book5.pdf")

@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +25,8 @@ class PdfViewerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPdfViewerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.floatingPen.visibility = android.view.View.GONE
 
         val fileName = intent.getStringExtra("pdf_file") ?: return
 

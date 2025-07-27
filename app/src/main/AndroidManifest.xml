@@ -27,6 +27,9 @@
 <activity android:name=".PdfViewerActivity"
     android:exported="false"/>
 
+        <activity android:name=".activity.OpenVideoListActivity"
+            android:exported="false"/>
+
         <activity
             android:name=".Activity.MainActivity"
             android:exported="false" />

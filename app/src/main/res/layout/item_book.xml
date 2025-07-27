@@ -42,6 +42,7 @@
             android:id="@+id/bookTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/kalpurush"
             android:text="Book Title"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -55,10 +56,11 @@
             android:id="@+id/bookDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/kalpurush"
             android:text="Click to open"
             android:textSize="12sp"
             android:paddingTop="4dp"
             android:gravity="center"
-            android:textColor="#666666" />
+            />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
