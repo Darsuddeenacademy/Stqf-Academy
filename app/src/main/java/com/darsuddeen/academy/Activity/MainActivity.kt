@@ -1,12 +1,16 @@
-package com.darsuddeen.academy
+package com.darsuddeen.academy.Activity
 
-import android.content.Context
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.darsuddeen.academy.BookFragment
+
+import com.darsuddeen.academy.Fragment.DashBoardFragment
+import com.darsuddeen.academy.Fragment.HomeFragment
+import com.darsuddeen.academy.Fragment.VideoClassFragment
+import com.darsuddeen.academy.R
 import com.darsuddeen.academy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

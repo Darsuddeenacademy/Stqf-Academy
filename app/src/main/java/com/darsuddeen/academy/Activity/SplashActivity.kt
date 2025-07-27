@@ -1,4 +1,4 @@
-package com.darsuddeen.academy
+package com.darsuddeen.academy.Activity
 
 import android.content.Intent
 import android.os.Bundle

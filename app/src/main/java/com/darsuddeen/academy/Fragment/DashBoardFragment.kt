@@ -1,4 +1,4 @@
-package com.darsuddeen.academy
+package com.darsuddeen.academy.Fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

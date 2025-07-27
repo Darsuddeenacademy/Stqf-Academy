@@ -1,4 +1,4 @@
-package com.darsuddeen.academy
+package com.darsuddeen.academy.Fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.darsuddeen.academy.Adapter.VideoAdapter
+import com.darsuddeen.academy.Model.VideoModel
+import com.darsuddeen.academy.Activity.OpenVideoListActivity
+import com.darsuddeen.academy.R
 import com.darsuddeen.academy.databinding.FragmentVideosBinding
 
 class VideoClassFragment : Fragment() {

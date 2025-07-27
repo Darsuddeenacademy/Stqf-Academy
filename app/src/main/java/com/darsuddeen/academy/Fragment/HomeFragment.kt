@@ -1,4 +1,4 @@
-package com.darsuddeen.academy
+package com.darsuddeen.academy.Fragment
 
 import android.annotation.SuppressLint
 import android.content.Context
