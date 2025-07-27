@@ -31,11 +31,11 @@ class BookFragment : Fragment() {
 
         // ✅ Book List
         val bookList = listOf(
-            BookModel("Learn Surah Fatiha", "Book1.pdf"),
-            BookModel("Learn Surah Yaseen", "Book2.pdf"),
-            BookModel("Tajweed Rules", "Book3.pdf"),
-            BookModel("500 Quranic Words", "Book4.pdf"),
-            BookModel("Arabic Grammar", "Book5.pdf")
+            BookModel("DDA সহজ কুরআন শিক্ষা কায়দা", "Book1.pdf"),
+            BookModel("DDA ইসলাম শিক্ষা", "Book2.pdf"),
+            BookModel("কুরআনের ৫০০ শব্দ", "Book3.pdf"),
+            BookModel("৫০০ শব্দের অনুশীলনী", "Book4.pdf"),
+            BookModel("Everyday English", "Book5.pdf")
         )
 
         // ✅ RecyclerView setup

@@ -23,8 +23,9 @@
             android:exported="false" />
 
 
-        <activity android:name=".PdfViewerActivity"
-            android:exported="false"/>
+
+<activity android:name=".PdfViewerActivity"
+    android:exported="false"/>
 
         <activity
             android:name=".Activity.MainActivity"
