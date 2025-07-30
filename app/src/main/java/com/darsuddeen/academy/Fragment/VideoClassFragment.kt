@@ -28,12 +28,13 @@ class VideoClassFragment : Fragment() {
         ),
         VideoModel(
             "শুদ্ধভাবে সূরা শিখি ( Darsud Deen Academy )",
-            "https://youtube.com/playlist?list=PLdZH8A1MbXdctUJK5H4VI694gtM5md_OC",
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdfYT_UKpdhjOKwSzLceNaSy",
             R.drawable.playlist_tb33
         ),
         VideoModel(
             "নামাজের অর্থ ও মর্মার্থ বুঝে নামাজ শিক্ষা",
-            "https://youtube.com/playlist?list=PLdZH8A1MbXdfYT_UKpdhjOKwSzLceNaSy",
+
+            "https://youtube.com/playlist?list=PLdZH8A1MbXdctUJK5H4VI694gtM5md_OC",
             R.drawable.playlist_tb22
 
 

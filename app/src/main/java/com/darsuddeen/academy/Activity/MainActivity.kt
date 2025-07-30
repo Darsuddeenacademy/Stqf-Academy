@@ -1,12 +1,13 @@
 package com.darsuddeen.academy.Activity
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.darsuddeen.academy.BookFragment
-
 import com.darsuddeen.academy.Fragment.DashBoardFragment
 import com.darsuddeen.academy.Fragment.HomeFragment
 import com.darsuddeen.academy.Fragment.VideoClassFragment
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var isNowOnHome = true
+    private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         loadFragment(HomeFragment())
         binding.bottomNavigationView.selectedItemId = R.id.menu_home
 
-        // Bottom navigation click
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> {
@@ -50,12 +51,15 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        // Back button behavior
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
 
-                // যদি এখন হোমে না থাকি, তাহলে হোমে নিয়ে যাবে
+                if (currentFragment is HomeFragment && currentFragment.canGoBack()) {
+                    currentFragment.goBack()
+                    return
+                }
+
                 if (!isNowOnHome) {
                     isNowOnHome = true
                     loadFragment(HomeFragment())
@@ -63,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
 
-                // এখন হোমে আছি — তাই Exit Dialog দেখাবে
+                // শুধু ডায়লগ বক্স
                 showExitDialog()
             }
         })
@@ -82,5 +86,5 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .commit()
-        }
+    }
 }

@@ -2,17 +2,14 @@ package com.darsuddeen.academy.Adapter
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.darsuddeen.academy.Model.BookModel
-import com.darsuddeen.academy.Utils.PDFUtils
-import com.darsuddeen.academy.databinding.ItemBookBinding
-
 import com.darsuddeen.academy.PdfViewerActivity
+import com.darsuddeen.academy.databinding.ItemBookBinding
 
 class BookAdapter(
     private val context: Context,
@@ -32,13 +29,10 @@ class BookAdapter(
         holder.binding.bookTitle.text = book.title
         holder.binding.bookDescription.text = "Click to open ${book.title}"
 
-        // Load first page thumbnail
-        val thumbnail: Bitmap? = PDFUtils.getFirstPageThumbnail(context, book.assetFileName)
-        thumbnail?.let {
-            holder.binding.bookThumbnail.setImageBitmap(it)
-        }
+        // ✅ Use preloaded drawable thumbnail
+        holder.binding.bookThumbnail.setImageResource(book.thumbnailResId)
 
-        // Show ripple then open PDF
+        // Click to open PDF
         holder.binding.root.setOnClickListener {
             Handler(Looper.getMainLooper()).postDelayed({
                 val intent = Intent(context, PdfViewerActivity::class.java)

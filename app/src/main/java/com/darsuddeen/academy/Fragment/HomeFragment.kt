@@ -1,20 +1,18 @@
 package com.darsuddeen.academy.Fragment
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.webkit.*
+import androidx.fragment.app.Fragment
 import com.darsuddeen.academy.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -32,7 +30,6 @@ class HomeFragment : Fragment() {
         val webView = binding.webview
         val progressBar = binding.progressBar
 
-        // Enable JavaScript and other settings
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
         webSettings.domStorageEnabled = true
@@ -43,8 +40,25 @@ class HomeFragment : Fragment() {
 
         webView.webChromeClient = WebChromeClient()
 
-        // Handle WebView loading and errors
         webView.webViewClient = object : WebViewClient() {
+
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                val url = request?.url.toString()
+
+                // যদি WhatsApp লিংক হয় → বাইরের অ্যাপ দিয়ে ওপেন করো
+                if (url.startsWith("https://wa.me") || url.contains("whatsapp.com")) {
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        // WhatsApp ইনস্টল না থাকলে কিছু করো না
+                    }
+                    return true // WebView-এ লোড না করানোই ভালো
+                }
+
+                return false
+            }
+
             override fun onPageFinished(view: WebView?, url: String?) {
                 progressBar.visibility = View.GONE
             }
@@ -61,28 +75,23 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Load website or error page
         if (isInternetAvailable()) {
             webView.loadUrl("https://darsuddeenacademy.com")
         } else {
             webView.loadUrl("file:///android_asset/error.html")
         }
 
-        // Handle back press
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (webView.canGoBack()) {
-                    webView.goBack()
-                } else {
-                    requireActivity().finish()
-                }
-            }
-        })
-
         return binding.root
     }
 
-    // Check internet availability
+    fun canGoBack(): Boolean {
+        return binding.webview.canGoBack()
+    }
+
+    fun goBack() {
+        binding.webview.goBack()
+    }
+
     private fun isInternetAvailable(): Boolean {
         val connectivityManager =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -94,6 +103,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
-        }
+        _binding = null
+    }
 }
