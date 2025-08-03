@@ -1,33 +1,55 @@
 package com.darsuddeen.academy.Fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.darsuddeen.academy.activity.LiveBooksActivity
 import com.darsuddeen.academy.databinding.FragmentDashBoardBinding
 
 class DashBoardFragment : Fragment() {
 
-    // ViewBinding reference
     private var _binding: FragmentDashBoardBinding? = null
     private val binding get() = _binding!!
 
-    // Inflate layout and return root view
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDashBoardBinding.inflate(inflater, container, false)
 
-        // You can use binding.dashboardText.text = "Welcome" etc.
+        binding.cardNamazTime.setOnClickListener {
+            Toast.makeText(requireContext(), "নামাজের সময়সূচী", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cardHadith.setOnClickListener {
+            Toast.makeText(requireContext(), "আজকের হাদিস", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cardQuranAyat.setOnClickListener {
+            Toast.makeText(requireContext(), "আজকের আয়াত", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cardTasbih.setOnClickListener {
+            Toast.makeText(requireContext(), "তসবিহ কাউন্টার", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cardMahasaba.setOnClickListener {
+            Toast.makeText(requireContext(), "মহাসাবা", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cardOnlineBooks.setOnClickListener {
+            startActivity(Intent(requireContext(), LiveBooksActivity::class.java))
+        }
 
         return binding.root
     }
 
-    // Clean up binding
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding=null
-        }
+        _binding = null
+    }
 }

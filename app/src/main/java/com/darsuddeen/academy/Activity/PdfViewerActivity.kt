@@ -12,6 +12,7 @@ import com.darsuddeen.academy.databinding.ActivityPdfViewerBinding
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
 import com.github.barteksc.pdfviewer.util.FitPolicy
+import java.io.File
 
 class PdfViewerActivity : AppCompatActivity() {
 
@@ -28,26 +29,32 @@ class PdfViewerActivity : AppCompatActivity() {
 
         binding.floatingPen.visibility = android.view.View.GONE
 
-        val fileName = intent.getStringExtra("pdf_file") ?: return
+        val filePath = intent.getStringExtra("pdf_file") ?: return
 
-        binding.pdfView.fromAsset(fileName)
-            .enableSwipe(true)
-            .swipeHorizontal(false)
-            .enableDoubletap(true)
-            .pageFitPolicy(FitPolicy.WIDTH)
-            .onPageChange(object : OnPageChangeListener {
-                override fun onPageChanged(page: Int, pageCount: Int) {
-                    totalPages = pageCount
-                    binding.pageNumberText.text = "${page + 1} / $pageCount"
-                }
-            })
-            .onTap(OnTapListener {
-                togglePenIcon()
-                true
-            })
-            .load()
+        if (filePath.startsWith("/")) {
+            // PDF from local storage (downloaded)
+            val file = File(filePath)
+            binding.pdfView.fromFile(file)
+                .enableSwipe(true)
+                .swipeHorizontal(false)
+                .enableDoubletap(true)
+                .pageFitPolicy(FitPolicy.WIDTH)
+                .onPageChange(onPageChangeListener)
+                .onTap(tapListener)
+                .load()
+        } else {
+            // PDF from assets folder
+            binding.pdfView.fromAsset(filePath)
+                .enableSwipe(true)
+                .swipeHorizontal(false)
+                .enableDoubletap(true)
+                .pageFitPolicy(FitPolicy.WIDTH)
+                .onPageChange(onPageChangeListener)
+                .onTap(tapListener)
+                .load()
+        }
 
-        // Page jump
+        // Page number tap to jump
         binding.pageNumberText.setOnClickListener {
             showPageInputDialog()
         }
@@ -75,6 +82,16 @@ class PdfViewerActivity : AppCompatActivity() {
         }
     }
 
+    private val onPageChangeListener = OnPageChangeListener { page, pageCount ->
+        totalPages = pageCount
+        binding.pageNumberText.text = "${page + 1} / $pageCount"
+    }
+
+    private val tapListener = OnTapListener {
+        togglePenIcon()
+        true
+    }
+
     private fun togglePenIcon() {
         isPenIconVisible = !isPenIconVisible
         binding.floatingPen.visibility =
@@ -100,6 +117,6 @@ class PdfViewerActivity : AppCompatActivity() {
                 }
             }
             .setNegativeButton("Cancel", null)
-        .show()
-        }
+            .show()
+    }
 }

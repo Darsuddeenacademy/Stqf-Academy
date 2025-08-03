@@ -1,29 +1,318 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dashboardLayout"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.DashBoardFragment">
+    android:padding="12dp"
+    android:background="#F9F9F9">
 
-    <!-- Example UI element -->
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_marginTop="200dp"
-        android:layout_width="wrap_content"
-        android:layout_height="125dp"
-        android:src="@drawable/ddalogo" />
-
-    <TextView
-        android:id="@+id/dashboardText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/kalpurush"
-        android:text="কাজ চলমান রয়েছে \nখুব দ্রুতই আপডেট দেওয়া হবে ইংশা-আল্লাহ"
-        android:textAlignment="center"
-        android:textColor="#008000"
-        android:textSize="22sp"
-        android:layout_gravity="center" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <!-- 🕌 Top Countdown Bar -->
+        <TextView
+            android:id="@+id/namazCountdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ফজরের নামাজ শুরু হতে বাকি ৩৫ মিনিট"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:padding="16dp"
+            android:fontFamily="@font/kalpurush"
+            android:background="#00796B"
+            android:gravity="center"
+            android:layout_marginBottom="12dp" />
+
+        <!-- 🔳 Grid of Dashboard Cards -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:useDefaultMargins="true"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false"
+            android:padding="08dp">
+
+            <!-- 🕋 আজকের হাদিস -->
+            <LinearLayout
+                android:id="@+id/cardHadith"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/prophet"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="আজকের হাদিস"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 📖 আজকের আয়াত -->
+            <LinearLayout
+                android:id="@+id/cardQuranAyat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_quran"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="আজকের আয়াত"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 🔢 তসবিহ কাউন্টার -->
+            <LinearLayout
+                android:id="@+id/cardTasbih"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_tasbih"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="তসবিহ কাউন্টার"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 📚 লাইভ বই পড়া -->
+            <LinearLayout
+                android:id="@+id/cardOnlineBooks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_book"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="কিতাব"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 🕰️ নামাজের সময়সূচী -->
+            <LinearLayout
+                android:id="@+id/cardNamazTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_namaz"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="নামাজের সময়"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 👥 মহাসাবা -->
+            <LinearLayout
+                android:id="@+id/cardMahasaba"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_mahasaba"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="মুহাসাবা"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 📖 তিলাওয়াত -->
+            <LinearLayout
+                android:id="@+id/tilawat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/book"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="তিলাওয়াত"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 🙌 দোয়া -->
+            <LinearLayout
+                android:id="@+id/doa"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/hands"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="দোয়া"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+
+            <!-- 🧡 ৯৯ নাম -->
+            <LinearLayout
+                android:id="@+id/asmaul"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="12dp"
+                android:elevation="3dp"
+                android:background="@drawable/bg_card_white">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/asmaul"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="৯৯ নাম"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/kalpurush"
+                    android:gravity="center"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="2" />
+            </LinearLayout>
+        </GridLayout>
+
+        <!-- 🔽 Live Books RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/booksRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:padding="8dp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,8 +1,6 @@
 package com.darsuddeen.academy.Activity
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
