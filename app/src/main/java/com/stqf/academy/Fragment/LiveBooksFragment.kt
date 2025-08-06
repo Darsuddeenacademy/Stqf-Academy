@@ -1,4 +1,4 @@
-package com.stqf.academy.fragment
+package com.darsuddeen.academy.fragment
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -10,11 +10,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.stqf.academy.adapter.BookApiAdapter
-import com.stqf.academy.databinding.FragmentLiveBooksBinding
-import com.stqf.academy.model.BookApiModel
-import com.stqf.academy.model.BookApiResponse
-import com.stqf.academy.network.ApiClient
+import com.darsuddeen.academy.adapter.BookApiAdapter
+import com.darsuddeen.academy.databinding.FragmentLiveBooksBinding
+import com.darsuddeen.academy.model.BookApiModel
+import com.darsuddeen.academy.model.BookApiResponse
+import com.darsuddeen.academy.network.ApiClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

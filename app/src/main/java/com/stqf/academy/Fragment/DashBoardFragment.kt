@@ -1,4 +1,4 @@
-package com.stqf.academy.fragment
+package com.darsuddeen.academy.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.stqf.academy.R
-import com.stqf.academy.databinding.FragmentDashBoardBinding
+import com.darsuddeen.academy.R
+import com.darsuddeen.academy.databinding.FragmentDashBoardBinding
 
 class DashBoardFragment : Fragment() {
 

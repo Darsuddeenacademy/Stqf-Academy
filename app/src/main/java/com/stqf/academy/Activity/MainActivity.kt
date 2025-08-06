@@ -1,17 +1,17 @@
-package com.stqf.academy.Activity
+package com.darsuddeen.academy.Activity
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.stqf.academy.BookFragment
-import com.stqf.academy.Fragment.HomeFragment
-import com.stqf.academy.Fragment.VideoClassFragment
-import com.stqf.academy.R
-import com.stqf.academy.databinding.ActivityMainBinding
-import com.stqf.academy.fragment.DashBoardFragment
-import com.stqf.academy.fragment.LiveBooksFragment
+import com.darsuddeen.academy.BookFragment
+import com.darsuddeen.academy.Fragment.HomeFragment
+import com.darsuddeen.academy.Fragment.VideoClassFragment
+import com.darsuddeen.academy.R
+import com.darsuddeen.academy.databinding.ActivityMainBinding
+import com.darsuddeen.academy.fragment.DashBoardFragment
+import com.darsuddeen.academy.fragment.LiveBooksFragment
 
 class MainActivity : AppCompatActivity() {
 
