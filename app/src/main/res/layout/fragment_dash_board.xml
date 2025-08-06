@@ -33,7 +33,9 @@
             android:useDefaultMargins="true"
             android:alignmentMode="alignMargins"
             android:columnOrderPreserved="false"
-            android:padding="08dp">
+            android:padding="8dp">
+
+            <!-- তোর সব কার্ড গুলো একদম আগের মতোই নিচে রইলো -->
 
             <!-- 🕋 আজকের হাদিস -->
             <LinearLayout
@@ -46,13 +48,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/prophet"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -76,13 +76,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_quran"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -106,13 +104,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_tasbih"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,13 +132,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_book"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,13 +160,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_namaz"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -196,13 +188,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/ic_mahasaba"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -226,13 +216,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/book"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -256,13 +244,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/hands"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -286,13 +272,11 @@
                 android:padding="12dp"
                 android:elevation="3dp"
                 android:background="@drawable/bg_card_white">
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/asmaul"
                     android:layout_gravity="center" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -304,15 +288,15 @@
                     android:layout_marginTop="6dp"
                     android:maxLines="2" />
             </LinearLayout>
+
         </GridLayout>
 
-        <!-- 🔽 Live Books RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/booksRecyclerView"
+        <!-- ✅ এখানে LiveBooksFragment লোড হবে -->
+        <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:visibility="gone"
-            android:padding="8dp" />
+            android:visibility="visible" />
     </LinearLayout>
 </ScrollView>

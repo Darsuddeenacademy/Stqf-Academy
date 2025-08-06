@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.darsuddeen.academy'
+    namespace 'com.stqf.academy'
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.darsuddeen.academy"
+        applicationId "com.stqf.academy"
         minSdk 24
         targetSdk 34
         versionCode 4

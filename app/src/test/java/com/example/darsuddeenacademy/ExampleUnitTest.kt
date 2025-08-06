@@ -1,4 +1,4 @@
-package com.darsuddeen.academy
+package com.stqf.academy
 
 import org.junit.Test
 
