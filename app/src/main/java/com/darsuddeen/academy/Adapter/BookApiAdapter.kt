@@ -1,21 +1,29 @@
 package com.darsuddeen.academy.adapter
 
+import android.app.Activity
 import android.app.AlertDialog
-import android.app.ProgressDialog
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Environment
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.darsuddeen.academy.PdfViewerActivity
+import com.darsuddeen.academy.R
 import com.darsuddeen.academy.databinding.ItemBookBinding
 import com.darsuddeen.academy.model.BookApiModel
 import java.io.File
-import java.io.FileOutputStream
-import java.net.URL
-import kotlin.concurrent.thread
 
 class BookApiAdapter(
     private val context: Context,
@@ -35,89 +43,167 @@ class BookApiAdapter(
         holder.binding.bookTitle.text = book.title
         holder.binding.bookDescription.text = book.description
 
-        Glide.with(context)
-            .load(book.thumbnail_url)
-            .into(holder.binding.bookThumbnail)
+        val thumbFile = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "book_thumbnails/${book.title.replace(" ", "_")}.jpg"
+        )
+
+        Log.d("THUMB_PATH", "Trying: ${thumbFile.absolutePath} | Exists: ${thumbFile.exists()}")
+
+        if (thumbFile.exists()) {
+            Glide.with(context)
+                .load(thumbFile)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(holder.binding.bookThumbnail)
+        } else if (book.thumbnail_url.startsWith("http")) {
+            Glide.with(context)
+                .load(book.thumbnail_url)
+                .error(R.drawable.default_thumb)
+                .into(holder.binding.bookThumbnail)
+        } else {
+            Glide.with(context)
+                .load(R.drawable.default_thumb)
+                .into(holder.binding.bookThumbnail)
+        }
 
         holder.itemView.setOnClickListener {
-            val isOnline = book.pdf_url.startsWith("http")
+            val activityContext = context as? Activity ?: return@setOnClickListener
+
             val fileName = book.title.replace(" ", "_") + ".pdf"
+            val downloadDir = File(activityContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "pdf_books")
+            if (!downloadDir.exists()) downloadDir.mkdirs()
+            val localFile = File(downloadDir, fileName)
 
-            if (isOnline) {
-                val localFile = File(
-                    context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/pdf_books",
-                    fileName
-                )
+            if (localFile.exists()) {
+                val intent = Intent(activityContext, PdfViewerActivity::class.java)
+                intent.putExtra("pdf_file", localFile.absolutePath)
+                activityContext.startActivity(intent)
+            } else {
+                AlertDialog.Builder(activityContext)
+                    .setTitle("Download Book")
+                    .setMessage("Do you want to download this book for offline reading?")
+                    .setPositiveButton("Yes") { _, _ ->
 
-                if (localFile.exists()) {
-                    // File exists, open directly
-                    val intent = Intent(context, PdfViewerActivity::class.java)
-                    intent.putExtra("pdf_file", localFile.absolutePath)
-                    context.startActivity(intent)
-                } else {
-                    AlertDialog.Builder(context)
-                        .setTitle("Download Book")
-                        .setMessage("Do you want to download this book for offline reading?")
-                        .setPositiveButton("Yes") { _, _ ->
-                            val progressDialog = ProgressDialog(context)
-                            progressDialog.setTitle("Downloading")
-                            progressDialog.setMessage("Please wait...")
-                            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-                            progressDialog.setCancelable(false)
-                            progressDialog.show()
+                        val progressText = TextView(activityContext).apply {
+                            text = "Downloading..."
+                            setPadding(20, 20, 20, 20)
+                        }
 
-                            thread {
-                                try {
-                                    val url = URL(book.pdf_url)
-                                    val connection = url.openConnection()
-                                    connection.connect()
+                        val progressBar = ProgressBar(
+                            activityContext,
+                            null,
+                            android.R.attr.progressBarStyleHorizontal
+                        ).apply {
+                            isIndeterminate = false
+                            max = 100
+                        }
 
-                                    val fileLength = connection.contentLength
+                        val layout = LinearLayout(activityContext).apply {
+                            orientation = LinearLayout.VERTICAL
+                            setPadding(40, 30, 40, 30)
+                            addView(progressText)
+                            addView(progressBar)
+                        }
 
-                                    val input = url.openStream()
-                                    val output = FileOutputStream(localFile)
+                        val progressDialog = AlertDialog.Builder(activityContext)
+                            .setView(layout)
+                            .setCancelable(false)
+                            .create()
 
-                                    val data = ByteArray(1024)
-                                    var total: Long = 0
-                                    var count: Int
+                        progressDialog.window?.setLayout(
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            WindowManager.LayoutParams.WRAP_CONTENT
+                        )
 
-                                    while (input.read(data).also { count = it } != -1) {
-                                        total += count
-                                        output.write(data, 0, count)
+                        progressDialog.show()
 
-                                        // Update progress bar
-                                        val progress = (total * 100 / fileLength).toInt()
-                                        progressDialog.progress = progress
+                        val request = DownloadManager.Request(Uri.parse(book.pdf_url))
+                        request.setTitle("Downloading PDF")
+                        request.setDescription("Downloading $fileName")
+                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE) // ✅ FIXED
+                        request.setDestinationInExternalFilesDir(
+                            activityContext,
+                            Environment.DIRECTORY_DOWNLOADS,
+                            "pdf_books/$fileName"
+                        )
+
+                        val downloadManager = activityContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                        val downloadId = downloadManager.enqueue(request)
+
+                        val checkDownloadHandler = Handler(activityContext.mainLooper)
+                        checkDownloadHandler.post(object : Runnable {
+                            override fun run() {
+                                val query = DownloadManager.Query().setFilterById(downloadId)
+                                val cursor = downloadManager.query(query)
+                                if (cursor != null && cursor.moveToFirst()) {
+                                    val status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+                                    val total = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                                    val downloaded = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+
+                                    if (total > 0) {
+                                        val percent = (downloaded * 100 / total.toFloat()).toInt()
+                                        progressBar.progress = percent
+                                        progressText.text = "Downloading: $percent%"
                                     }
 
-                                    output.flush()
-                                    output.close()
-                                    input.close()
+                                    if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                                        cursor.close()
+                                        progressDialog.dismiss()
 
-                                    progressDialog.dismiss()
+                                        // ✅ Download thumbnail now
+                                        downloadThumbnailImage(activityContext, book.thumbnail_url, book.title)
 
-                                    // Open the file
-                                    val intent = Intent(context, PdfViewerActivity::class.java)
-                                    intent.putExtra("pdf_file", localFile.absolutePath)
-                                    context.startActivity(intent)
+                                        val downloadedFile = File(
+                                            activityContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+                                            "pdf_books/$fileName"
+                                        )
 
-                                } catch (e: Exception) {
-                                    progressDialog.dismiss()
-                                    e.printStackTrace()
+                                        if (downloadedFile.exists()) {
+                                            val viewIntent = Intent(activityContext, PdfViewerActivity::class.java)
+                                            viewIntent.putExtra("pdf_file", downloadedFile.absolutePath)
+                                            activityContext.startActivity(viewIntent)
+                                        } else {
+                                            Toast.makeText(context, "Download failed or file missing", Toast.LENGTH_SHORT).show()
+                                        }
+
+                                        return
+                                    }
                                 }
+                                cursor?.close()
+                                checkDownloadHandler.postDelayed(this, 1000)
                             }
-                        }
-                        .setNegativeButton("No", null)
-                        .show()
-                }
-            } else {
-                // Asset-based offline PDF
-                val intent = Intent(context, PdfViewerActivity::class.java)
-                intent.putExtra("pdf_file", book.pdf_url)
-                context.startActivity(intent)
+                        })
+
+                        Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
             }
         }
     }
 
     override fun getItemCount(): Int = bookList.size
+
+    private fun downloadThumbnailImage(context: Context, imageUrl: String, title: String) {
+        try {
+            val fileName = title.replace(" ", "_") + ".jpg"
+            val request = DownloadManager.Request(Uri.parse(imageUrl))
+            request.setTitle("Downloading Thumbnail")
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE) // ✅ FIXED
+            request.setDestinationInExternalFilesDir(
+                context,
+                Environment.DIRECTORY_PICTURES,
+                "book_thumbnails/$fileName"
+            )
+
+            val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            downloadManager.enqueue(request)
+
+            Log.d("THUMB_DOWNLOAD", "Started thumbnail download: $fileName")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("THUMB_DOWNLOAD", "Thumbnail download failed: ${e.localizedMessage}")
+        }
+    }
 }

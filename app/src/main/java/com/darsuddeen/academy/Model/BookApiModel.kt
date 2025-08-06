@@ -1,7 +1,7 @@
 package com.darsuddeen.academy.model
 
 data class BookApiModel(
-    val id: String,
+    val id: Int = 0, // <-- Default value added
     val title: String,
     val description: String,
     val pdf_url: String,

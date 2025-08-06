@@ -1,13 +1,12 @@
-package com.darsuddeen.academy.Fragment
+package com.darsuddeen.academy.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.darsuddeen.academy.activity.LiveBooksActivity
+import com.darsuddeen.academy.R
 import com.darsuddeen.academy.databinding.FragmentDashBoardBinding
 
 class DashBoardFragment : Fragment() {
@@ -21,6 +20,7 @@ class DashBoardFragment : Fragment() {
     ): View {
         _binding = FragmentDashBoardBinding.inflate(inflater, container, false)
 
+        // Example cards
         binding.cardNamazTime.setOnClickListener {
             Toast.makeText(requireContext(), "নামাজের সময়সূচী", Toast.LENGTH_SHORT).show()
         }
@@ -41,8 +41,18 @@ class DashBoardFragment : Fragment() {
             Toast.makeText(requireContext(), "মহাসাবা", Toast.LENGTH_SHORT).show()
         }
 
+        // ✅ Slide-in animation with LiveBooksFragment
         binding.cardOnlineBooks.setOnClickListener {
-            startActivity(Intent(requireContext(), LiveBooksActivity::class.java))
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+                )
+                .replace(R.id.fragmentContainer, LiveBooksFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         return binding.root

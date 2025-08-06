@@ -6,17 +6,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.darsuddeen.academy.BookFragment
-import com.darsuddeen.academy.Fragment.DashBoardFragment
 import com.darsuddeen.academy.Fragment.HomeFragment
 import com.darsuddeen.academy.Fragment.VideoClassFragment
 import com.darsuddeen.academy.R
 import com.darsuddeen.academy.databinding.ActivityMainBinding
+import com.darsuddeen.academy.fragment.DashBoardFragment
+import com.darsuddeen.academy.fragment.LiveBooksFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var isNowOnHome = true
-    private var doubleBackToExitPressedOnce = false
+    private var justNavigatedToHome = false
+    private var exitDialogShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,25 +25,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // App launch হলে একবারই এই ফ্ল্যাগ হবে
+        justNavigatedToHome = true
+
         loadFragment(HomeFragment())
         binding.bottomNavigationView.selectedItemId = R.id.menu_home
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_home -> {
-                    isNowOnHome = true
                     loadFragment(HomeFragment())
                 }
                 R.id.menu_books -> {
-                    isNowOnHome = false
                     loadFragment(BookFragment())
                 }
                 R.id.menu_videos -> {
-                    isNowOnHome = false
                     loadFragment(VideoClassFragment())
                 }
                 R.id.menu_dashboard -> {
-                    isNowOnHome = false
                     loadFragment(DashBoardFragment())
                 }
             }
@@ -53,30 +53,46 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
 
+                // HomeFragment এর WebView ব্যাক নেভিগেশন
                 if (currentFragment is HomeFragment && currentFragment.canGoBack()) {
                     currentFragment.goBack()
                     return
                 }
 
-                if (!isNowOnHome) {
-                    isNowOnHome = true
+                // LiveBooksFragment → DashBoardFragment
+                if (currentFragment is LiveBooksFragment) {
+                    loadFragment(DashBoardFragment())
+                    binding.bottomNavigationView.selectedItemId = R.id.menu_dashboard
+                    return
+                }
+
+                // যেকোনো Fragment থেকে → HomeFragment
+                if (currentFragment !is HomeFragment) {
                     loadFragment(HomeFragment())
                     binding.bottomNavigationView.selectedItemId = R.id.menu_home
                     return
                 }
 
-                // শুধু ডায়লগ বক্স
-                showExitDialog()
+                // এখন যদি HomeFragment-এ থাকি
+                if (justNavigatedToHome) {
+                    justNavigatedToHome = false
+                } else {
+                    if (!exitDialogShown) {
+                        showExitDialog()
+                    }
+                }
             }
         })
     }
 
     private fun showExitDialog() {
+        exitDialogShown = true
         AlertDialog.Builder(this)
             .setTitle("Exit App")
             .setMessage("Are you sure you want to exit?")
             .setPositiveButton("Yes") { _, _ -> finish() }
-            .setNegativeButton("No", null)
+            .setNegativeButton("No") { _, _ -> exitDialogShown = false }
+            .setCancelable(false)
             .show()
     }
 
