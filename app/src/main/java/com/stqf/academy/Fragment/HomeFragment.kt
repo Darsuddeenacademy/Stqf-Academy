@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
         }
 
         if (isInternetAvailable()) {
-            webView.loadUrl("https://darsuddeenacademy.com")
+            webView.loadUrl("https://qarisalim.com/")
         } else {
             webView.loadUrl("file:///android_asset/error.html")
         }

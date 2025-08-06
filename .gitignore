@@ -1,15 +1,28 @@
+# Ignore IDE files
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.idea/
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Ignore Gradle files
+.gradle/
+build/
+.cxx/
+.externalNativeBuild/
+captures/
+
+# Ignore local config
 local.properties
+/local.properties
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore APK files (important!)
+*.apk
+/app/release/*

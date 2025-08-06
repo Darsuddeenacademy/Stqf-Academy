@@ -11,7 +11,7 @@
         android:layout_height="150dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:src="@drawable/ddalogo"
+        android:src="@drawable/stqflogo"
         android:contentDescription="App Logo" />
 
     <!-- ইংরেজি স্লোগান -->
@@ -19,7 +19,7 @@
         android:id="@+id/engText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to Darsud Deen Academy"
+        android:text="Welcome to STQF Academy"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_below="@id/logo"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:fontFamily="@font/siiib"
-        android:text="দারসুদ দ্বীন একাডেমিতে \n আপনাকে স্বাগতম"
+        android:text="সহীহ তা’লীমুল কুরআন ফাউন্ডেশন একাডেমিতে \n আপনাকে স্বাগতম"
         android:textSize="35sp"
         android:layout_below="@id/engText"
         android:layout_centerHorizontal="true"
@@ -54,15 +54,18 @@
         android:layout_marginBottom="16dp" />
 
     <!-- ডেভেলপার নাম -->
+
     <TextView
         android:id="@+id/developerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Developed by Ustaz Saifullah Bin Siraz"
-        android:textSize="12sp"
-        android:textColor="#888888"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="#388E3C"
         android:layout_above="@id/versionText"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="4dp" />
+
 
 </RelativeLayout>
