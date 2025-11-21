@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/pdfViewerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PdfViewerActivity">
 
-    <!-- PDF Viewer -->
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Drawing Overlay -->
     <com.stqf.academy.view.DrawingView
         android:id="@+id/drawingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:clickable="false" />
 
-    <!-- Page Number Display -->
     <TextView
         android:id="@+id/pageNumberText"
         android:layout_width="wrap_content"
@@ -33,7 +32,6 @@
         android:background="#80000000"
         android:elevation="4dp" />
 
-    <!-- Floating Pen Icon -->
     <ImageView
         android:id="@+id/floatingPen"
         android:layout_width="48dp"
@@ -43,7 +41,7 @@
         android:padding="8dp"
         android:src="@android:drawable/ic_menu_edit"
         android:background="@android:color/transparent"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <!-- Drawing Toolbar -->
     <LinearLayout
@@ -53,49 +51,209 @@
         android:layout_gravity="top|end"
         android:layout_marginEnd="72dp"
         android:orientation="horizontal"
-        android:background="#AA000000"
+        android:background="#CC000000"
         android:padding="8dp"
         android:visibility="gone">
 
-        <!-- Red -->
+        <!-- Pen -->
         <ImageView
-            android:id="@+id/colorRed"
+            android:id="@+id/btnPen"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:src="@drawable/pen_icon2"
+            android:padding="6dp"
             android:layout_marginEnd="8dp"
-            android:background="#FF0000" />
+            android:background="@drawable/bg_tool_normal"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
-        <!-- Green -->
+        <!-- Soft Pen (40% opacity) -->
         <ImageView
-            android:id="@+id/colorGreen"
+            android:id="@+id/btnPenSoft"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:src="@drawable/pen_icon3"
+            android:padding="6dp"
             android:layout_marginEnd="8dp"
-            android:background="#00FF00" />
+            android:background="@drawable/bg_tool_normal"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
-        <!-- Blue -->
+        <!-- Highlighter (drag-rect) -->
         <ImageView
-            android:id="@+id/colorBlue"
+            android:id="@+id/btnHighlighter"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:src="@drawable/highlighter_2_icon"
+            android:padding="6dp"
             android:layout_marginEnd="8dp"
-            android:background="#0000FF" />
+            android:background="@drawable/bg_tool_normal"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
-        <!-- Black -->
+        <!-- Shape Selector (Rect/Oval/Arrow) -->
         <ImageView
-            android:id="@+id/colorBlack"
+            android:id="@+id/btnShape"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:src="@drawable/cube_icon1"
+            android:padding="6dp"
             android:layout_marginEnd="8dp"
-            android:background="#000000" />
+            android:background="@drawable/bg_tool_normal"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
-        <!-- Clear Button -->
+        <!-- Eraser -->
+        <ImageView
+            android:id="@+id/btnEraser"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_reaser1"
+            android:padding="6dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_tool_normal"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
+
+        <!-- Undo -->
+        <ImageView
+            android:id="@+id/btnUndo"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_menu_revert"
+            android:padding="6dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
+
+        <!-- Redo -->
+        <ImageView
+            android:id="@+id/btnRedo"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@android:drawable/ic_menu_rotate"
+            android:padding="6dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
+
+        <!-- Clear -->
         <ImageView
             android:id="@+id/clearButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:background="@android:color/transparent" />
+    </LinearLayout>
+
+    <!-- Color Palette + Thickness + Shape options -->
+    <LinearLayout
+        android:id="@+id/colorPalette"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="72dp"
+        android:orientation="vertical"
+        android:background="#AA000000"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <!-- colors -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="6dp">
+
+            <ImageView
+                android:id="@+id/colorRed"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="#FF0000" />
+
+            <ImageView
+                android:id="@+id/colorGreen"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="#00FF00" />
+
+            <ImageView
+                android:id="@+id/colorBlue"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="#0000FF" />
+
+            <ImageView
+                android:id="@+id/colorYellow"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="#FFFF00" />
+
+            <ImageView
+                android:id="@+id/colorBlack"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:background="#000000" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/thicknessSeekBar"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="20" />
+
+        <!-- Shape choose: Rect / Oval / Arrow (shows only for Shape tool) -->
+        <LinearLayout
+            android:id="@+id/shapeRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <!-- Rectangle -->
+            <ImageView
+                android:id="@+id/btnShapeRect"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:srcCompat="@drawable/rectangle_icon"
+                android:contentDescription="@null"
+                android:padding="6dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_tool_normal"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                />
+
+            <!-- Circle / Oval -->
+            <ImageView
+                android:id="@+id/btnShapeOval"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/gol_icon"
+                android:contentDescription="@null"
+                android:padding="6dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_tool_normal"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                />
+
+            <!-- Arrow -->
+            <ImageView
+                android:id="@+id/btnShapeArrow"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/tir_icon"
+                android:contentDescription="@null"
+                android:padding="6dp"
+                android:background="@drawable/bg_tool_normal"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                />
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

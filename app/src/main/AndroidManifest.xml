@@ -25,7 +25,7 @@
        <activity android:name=".activity.LiveBooksActivity"
            android:exported="false"/>
         <activity
-            android:name=".Activity.OpenVideoListActivity"
+            android:name=".activity.OpenVideoListActivity"
             android:exported="false" />
         <activity
             android:name=".PdfViewerActivity"
@@ -34,10 +34,10 @@
             android:name=".activity.OpenVideoListActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.SplashActivity"
+            android:name=".activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
