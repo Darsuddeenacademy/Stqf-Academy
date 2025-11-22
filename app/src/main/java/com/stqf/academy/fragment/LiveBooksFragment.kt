@@ -34,6 +34,9 @@ class LiveBooksFragment : Fragment() {
 
         setupRecyclerView()
 
+        // ⭐ Loader On
+        showLoading(true)
+
         if (isNetworkAvailable(requireContext())) {
             loadBooksFromApi()
         } else {
@@ -48,6 +51,19 @@ class LiveBooksFragment : Fragment() {
             GridLayoutManager(requireContext(), 2)
     }
 
+    // ⭐ Loader Controller
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.liveBooksProgress.visibility = View.VISIBLE
+            binding.liveBooksLoadingText.visibility = View.VISIBLE
+            binding.liveBooksRecyclerView.visibility = View.GONE
+        } else {
+            binding.liveBooksProgress.visibility = View.GONE
+            binding.liveBooksLoadingText.visibility = View.GONE
+            binding.liveBooksRecyclerView.visibility = View.VISIBLE
+        }
+    }
+
     private fun loadBooksFromApi() {
         val call = ApiClient.bookApi.getBooks()
 
@@ -58,9 +74,15 @@ class LiveBooksFragment : Fragment() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     val books = response.body()!!.books
+
                     bookAdapter = BookApiAdapter(requireContext(), books)
                     binding.liveBooksRecyclerView.adapter = bookAdapter
+
+                    // ⭐ Loader Off
+                    showLoading(false)
+
                 } else {
+                    showLoading(false)
                     Toast.makeText(
                         requireContext(),
                         "লাইভ বই পাওয়া যায়নি",
@@ -70,6 +92,7 @@ class LiveBooksFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<BookApiResponse>, t: Throwable) {
+                showLoading(false)
                 Toast.makeText(
                     requireContext(),
                     "ত্রুটি: ${t.localizedMessage}",
@@ -80,6 +103,7 @@ class LiveBooksFragment : Fragment() {
     }
 
     private fun loadDownloadedBooks() {
+
         val downloadDir = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
             "pdf_books"
@@ -103,9 +127,7 @@ class LiveBooksFragment : Fragment() {
                         description = "অফলাইনে ডাউনলোড করা বই",
                         pdf_url = "",
                         thumbnail_url = if (thumbFile.exists())
-                            thumbFile.absolutePath
-                        else
-                            ""
+                            thumbFile.absolutePath else ""
                     )
 
                     offlineBooks.add(model)
@@ -116,12 +138,18 @@ class LiveBooksFragment : Fragment() {
         if (offlineBooks.isNotEmpty()) {
             bookAdapter = BookApiAdapter(requireContext(), offlineBooks)
             binding.liveBooksRecyclerView.adapter = bookAdapter
+
+            // ⭐ Loader Off
+            showLoading(false)
+
             Toast.makeText(
                 requireContext(),
                 "ইন্টারনেট নেই, অফলাইন বই দেখানো হচ্ছে",
                 Toast.LENGTH_SHORT
             ).show()
+
         } else {
+            showLoading(false)
             Toast.makeText(
                 requireContext(),
                 "কোনো বই ডাউনলোড করা নেই",
@@ -131,8 +159,7 @@ class LiveBooksFragment : Fragment() {
     }
 
     private fun isNetworkAvailable(context: Context): Boolean {
-        val cm =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val active = cm.activeNetworkInfo
         return active != null && active.isConnected
     }

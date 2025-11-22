@@ -1,13 +1,16 @@
 package com.stqf.academy.adapter
 
+
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Environment
 import android.os.Handler
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -15,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -85,31 +89,92 @@ class ColorQuranAdapter(
                 intent.putExtra("pdf_file", localFile.absolutePath)
                 activity.startActivity(intent)
             } else {
-                // 🔹 আগে ডাউনলোড হয়নি → ডাউনলোড ডায়ালগ
-                AlertDialog.Builder(activity)
-                    .setTitle("Download Quran")
-                    .setMessage("Do you want to download this Quran for offline reading?")
-                    .setPositiveButton("Yes") { _, _ ->
-                        startDownloadWithProgress(activity, item, fileName)
-                    }
-                    .setNegativeButton("No", null)
-                    .show()
+                // 🔹 আগে ডাউনলোড হয়নি → কাস্টম ডাউনলোড কনফার্মেশন ডায়ালগ
+                showDownloadConfirmDialog(activity, item, fileName)
             }
         }
     }
 
     override fun getItemCount(): Int = quranList.size
 
+    // ─────────────────────────────────────────────
+    // কাস্টম কনফার্মেশন ডায়ালগ (YES/NO box buttons)
+    // ─────────────────────────────────────────────
+    private fun showDownloadConfirmDialog(
+        activity: Activity,
+        item: BookApiModel,
+        fileName: String
+    ) {
+        val dialogTitle = "Download: ${item.title}\nকুরআনটি ডাউনলোড করবেন?"
+        val dialogMessage =
+            "To read this Quran online or offline, you need to download it once.\n\n" +
+                    "একবার ডাউনলোড করলেই অনলাইন ও অফলাইনে পড়ে রাখতে পারবেন ইনশাআল্লাহ।\n\n" +
+                    "Do you want to download now?\n" +
+                    "আপনি কি এখন ডাউনলোড করতে চান?"
+
+        val builder = AlertDialog.Builder(activity)
+        val dialogView = LayoutInflater.from(activity)
+            .inflate(R.layout.dialog_download_confirm, null)
+
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvTitle)
+        val tvMessage = dialogView.findViewById<TextView>(R.id.tvMessage)
+        val btnYes = dialogView.findViewById<TextView>(R.id.btnYes)
+        val btnNo = dialogView.findViewById<TextView>(R.id.btnNo)
+
+        tvTitle.text = dialogTitle
+        tvMessage.text = dialogMessage
+
+        val dialog = builder.setView(dialogView).create()
+        dialog.show()
+
+        dialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(
+                activity,
+                R.drawable.dialog_rounded_bg
+            )
+        )
+        dialog.window?.setLayout(
+            (activity.resources.displayMetrics.widthPixels * 0.90).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
+
+        btnNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnYes.setOnClickListener {
+            dialog.dismiss()
+            startDownloadWithProgress(activity, item, fileName)
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // ডাউনলোড + স্টাইলিশ Progress ডায়ালগ
+    // ─────────────────────────────────────────────
     private fun startDownloadWithProgress(
         activity: Activity,
         item: BookApiModel,
         fileName: String
     ) {
-        val progressText = TextView(activity).apply {
-            text = "Downloading..."
-            setPadding(20, 20, 20, 20)
+        // বই/কুরআনের নাম
+        val bookNameText = TextView(activity).apply {
+            text = "Downloading: ${item.title}"
+            textSize = 18f
+            setPadding(20, 10, 20, 10)
+            gravity = Gravity.CENTER
+            setTextColor(Color.WHITE)
         }
 
+        // পার্সেন্টেজ টেক্সট (Eng + Bn)
+        val progressText = TextView(activity).apply {
+            text = "Downloading: 0%\nডাউনলোড হচ্ছে: 0%"
+            textSize = 16f
+            setPadding(20, 10, 20, 10)
+            gravity = Gravity.CENTER_HORIZONTAL
+            setTextColor(Color.WHITE)
+        }
+
+        // স্টাইলিশ Horizontal ProgressBar
         val progressBar = ProgressBar(
             activity,
             null,
@@ -117,13 +182,38 @@ class ColorQuranAdapter(
         ).apply {
             isIndeterminate = false
             max = 100
+            progressDrawable = ContextCompat.getDrawable(
+                activity,
+                R.drawable.custom_progress_horizontal
+            )
+        }
+
+        val progressParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            dpToPx(activity, 16) // 16dp মোটা বার
+        ).apply {
+            topMargin = dpToPx(activity, 10)
+        }
+        progressBar.layoutParams = progressParams
+
+        val infoText = TextView(activity).apply {
+            text =
+                "Your internet speed may affect the download time.\n" +
+                        "আপনার ইন্টারনেট স্পিড অনুযায়ী সময় বেশি লাগতে পারে।\n\n" +
+                        "ডাউনলোড হতে হতে আসুন আল্লাহর জিকির করি:\n" +
+                        "সুবহানাল্লাহ, আলহামদুলিল্লাহ, আল্লাহু আকবার"
+            textSize = 14f
+            setPadding(20, 20, 20, 20)
+            setTextColor(Color.WHITE)
         }
 
         val layout = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(40, 30, 40, 30)
+            addView(bookNameText)
             addView(progressText)
             addView(progressBar)
+            addView(infoText)
         }
 
         val progressDialog = AlertDialog.Builder(activity)
@@ -131,13 +221,20 @@ class ColorQuranAdapter(
             .setCancelable(false)
             .create()
 
+        progressDialog.show()
+
+        progressDialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(
+                activity,
+                R.drawable.dialog_rounded_bg
+            )
+        )
         progressDialog.window?.setLayout(
-            WindowManager.LayoutParams.MATCH_PARENT,
+            (activity.resources.displayMetrics.widthPixels * 0.90).toInt(),
             WindowManager.LayoutParams.WRAP_CONTENT
         )
 
-        progressDialog.show()
-
+        // DownloadManager সেটআপ
         val request = DownloadManager.Request(Uri.parse(item.pdf_url))
         request.setTitle("Downloading Quran PDF")
         request.setDescription("Downloading $fileName")
@@ -179,7 +276,8 @@ class ColorQuranAdapter(
                         val percent =
                             (downloaded * 100 / total.toFloat()).toInt()
                         progressBar.progress = percent
-                        progressText.text = "Downloading: $percent%"
+                        progressText.text =
+                            "Downloading: $percent%\nডাউনলোড হচ্ছে: $percent%"
                     }
 
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
@@ -219,9 +317,17 @@ class ColorQuranAdapter(
             }
         })
 
-        Toast.makeText(activity, "Download started", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            activity,
+            "Download started… Your internet speed may affect the time.\n" +
+                    "ডাউনলোড শুরু হয়েছে… আপনার ইন্টারনেট স্পিড অনুযায়ী সময় লাগতে পারে।",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
+    // ─────────────────────────────────────────────
+    // Thumbnail ডাউনলোড (আগের মতই)
+    // ─────────────────────────────────────────────
     private fun downloadThumbnail(context: Context, item: BookApiModel) {
         if (!item.thumbnail_url.startsWith("http")) return
 
@@ -239,5 +345,11 @@ class ColorQuranAdapter(
 
         val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         dm.enqueue(request)
+    }
+
+    // dp → px helper
+    private fun dpToPx(context: Context, dp: Int): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
     }
 }

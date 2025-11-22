@@ -1,6 +1,5 @@
 package com.stqf.academy.fragment
 
-
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -36,6 +35,8 @@ class HafeziQuranFragment : Fragment() {
 
         setupRecyclerView()
 
+        showLoading(true)
+
         if (isNetworkAvailable(requireContext())) {
             loadFromApi()
         } else {
@@ -50,7 +51,19 @@ class HafeziQuranFragment : Fragment() {
             GridLayoutManager(requireContext(), 2)
     }
 
-    // 🔹 ভবিষ্যতে API তৈরি হলে এখানেই ডেটা আসবে
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.hafeziProgress.visibility = View.VISIBLE
+            binding.hafeziLoadingText.visibility = View.VISIBLE
+            binding.hafeziRecyclerView.visibility = View.GONE
+        } else {
+            binding.hafeziProgress.visibility = View.GONE
+            binding.hafeziLoadingText.visibility = View.GONE
+            binding.hafeziRecyclerView.visibility = View.VISIBLE
+        }
+    }
+
+    // 🔹 API থেকে Hafezi Quran
     private fun loadFromApi() {
         val call = ApiClient.hafeziApi.getHafeziQuran()
 
@@ -63,18 +76,31 @@ class HafeziQuranFragment : Fragment() {
                     val list = response.body()!!
                     hafeziAdapter = ColorQuranAdapter(requireContext(), list)
                     binding.hafeziRecyclerView.adapter = hafeziAdapter
+                    showLoading(false)
                 } else {
-                    Toast.makeText(requireContext(), "হাফেজী কুরআন পাওয়া যায়নি", Toast.LENGTH_SHORT).show()
+                    binding.hafeziProgress.visibility = View.GONE
+                    binding.hafeziLoadingText.visibility = View.GONE
+                    Toast.makeText(
+                        requireContext(),
+                        "হাফেজী কুরআন পাওয়া যায়নি",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<List<BookApiModel>>, t: Throwable) {
-                Toast.makeText(requireContext(), "ত্রুটি: ${t.localizedMessage}", Toast.LENGTH_LONG).show()
+                binding.hafeziProgress.visibility = View.GONE
+                binding.hafeziLoadingText.visibility = View.GONE
+                Toast.makeText(
+                    requireContext(),
+                    "ত্রুটি: ${t.localizedMessage}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }
 
-    // 🔹 অফলাইনে ডাউনলোড করা Hafezi Quran দেখাবে (color_quran এর মতোই)
+    // 🔹 অফলাইনে ডাউনলোড করা Hafezi Quran
     private fun loadDownloadedHafezi() {
         val downloadDir = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
@@ -111,9 +137,20 @@ class HafeziQuranFragment : Fragment() {
         if (offlineList.isNotEmpty()) {
             hafeziAdapter = ColorQuranAdapter(requireContext(), offlineList)
             binding.hafeziRecyclerView.adapter = hafeziAdapter
-            Toast.makeText(requireContext(), "ইন্টারনেট নেই, অফলাইন হাফেজী কুরআন দেখানো হচ্ছে", Toast.LENGTH_SHORT).show()
+            showLoading(false)
+            Toast.makeText(
+                requireContext(),
+                "ইন্টারনেট নেই, অফলাইন হাফেজী কুরআন দেখানো হচ্ছে",
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
-            Toast.makeText(requireContext(), "কোনো হাফেজী কুরআন ডাউনলোড করা নেই", Toast.LENGTH_LONG).show()
+            binding.hafeziProgress.visibility = View.GONE
+            binding.hafeziLoadingText.visibility = View.GONE
+            Toast.makeText(
+                requireContext(),
+                "কোনো হাফেজী কুরআন ডাউনলোড করা নেই",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

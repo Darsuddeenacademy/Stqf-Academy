@@ -35,6 +35,9 @@ class ColorQuranFragment : Fragment() {
 
         setupRecyclerView()
 
+        // শুরুতে Loader দেখাই
+        showLoading(true)
+
         if (isNetworkAvailable(requireContext())) {
             loadQuranFromApi()
         } else {
@@ -49,6 +52,19 @@ class ColorQuranFragment : Fragment() {
             GridLayoutManager(requireContext(), 2)
     }
 
+    // Loader on/off helper
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.colorQuranProgress.visibility = View.VISIBLE
+            binding.colorQuranLoadingText.visibility = View.VISIBLE
+            binding.colorQuranRecyclerView.visibility = View.GONE
+        } else {
+            binding.colorQuranProgress.visibility = View.GONE
+            binding.colorQuranLoadingText.visibility = View.GONE
+            binding.colorQuranRecyclerView.visibility = View.VISIBLE
+        }
+    }
+
     // 🔹 অনলাইনে API থেকে কালার কুরআন লোড
     private fun loadQuranFromApi() {
         val call = ApiClient.quranApi.getQuran()
@@ -60,10 +76,12 @@ class ColorQuranFragment : Fragment() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     val quranList = response.body()!!
-
                     quranAdapter = ColorQuranAdapter(requireContext(), quranList)
                     binding.colorQuranRecyclerView.adapter = quranAdapter
+                    showLoading(false)
                 } else {
+                    binding.colorQuranProgress.visibility = View.GONE
+                    binding.colorQuranLoadingText.visibility = View.GONE
                     Toast.makeText(
                         requireContext(),
                         "কালার কুরআন পাওয়া যায়নি",
@@ -73,6 +91,8 @@ class ColorQuranFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<List<BookApiModel>>, t: Throwable) {
+                binding.colorQuranProgress.visibility = View.GONE
+                binding.colorQuranLoadingText.visibility = View.GONE
                 Toast.makeText(
                     requireContext(),
                     "ত্রুটি: ${t.localizedMessage}",
@@ -105,7 +125,7 @@ class ColorQuranFragment : Fragment() {
                         id = 0,
                         title = title,
                         description = "অফলাইনে সংরক্ষিত কালার কুরআন",
-                        pdf_url = "",              // লোকাল থেকে ওপেন হবে
+                        pdf_url = "",
                         thumbnail_url = if (thumbFile.exists())
                             thumbFile.absolutePath
                         else
@@ -119,12 +139,15 @@ class ColorQuranFragment : Fragment() {
         if (offlineList.isNotEmpty()) {
             quranAdapter = ColorQuranAdapter(requireContext(), offlineList)
             binding.colorQuranRecyclerView.adapter = quranAdapter
+            showLoading(false)
             Toast.makeText(
                 requireContext(),
                 "ইন্টারনেট নেই, অফলাইন কালার কুরআন দেখানো হচ্ছে",
                 Toast.LENGTH_SHORT
             ).show()
         } else {
+            binding.colorQuranProgress.visibility = View.GONE
+            binding.colorQuranLoadingText.visibility = View.GONE
             Toast.makeText(
                 requireContext(),
                 "কোনো কালার কুরআন ডাউনলোড করা নেই",
