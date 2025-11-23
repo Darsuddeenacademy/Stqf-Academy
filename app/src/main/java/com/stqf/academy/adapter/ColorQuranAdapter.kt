@@ -105,7 +105,7 @@ class ColorQuranAdapter(
         item: BookApiModel,
         fileName: String
     ) {
-        val dialogTitle = "Download: ${item.title}\nকুরআনটি ডাউনলোড করবেন?"
+        val dialogTitle = "Download: ${item.title}\n"
         val dialogMessage =
             "To read this Quran online or offline, you need to download it once.\n\n" +
                     "একবার ডাউনলোড করলেই অনলাইন ও অফলাইনে পড়ে রাখতে পারবেন ইনশাআল্লাহ।\n\n" +

@@ -75,6 +75,21 @@ class DashBoardFragment : Fragment() {
             Toast.makeText(requireContext(), "মহাসাবা", Toast.LENGTH_SHORT).show()
         }
 
+        // 👥 তিলাওয়াত
+        binding.tilawat.setOnClickListener {
+            Toast.makeText(requireContext(), "তিলাওয়াত", Toast.LENGTH_SHORT).show()
+        }
+
+        // 👥 দোয়া
+        binding.doa.setOnClickListener {
+            Toast.makeText(requireContext(), "দোয়া", Toast.LENGTH_SHORT).show()
+        }
+
+        // 👥 ৯৯ নাম
+        binding.asmaul.setOnClickListener {
+            Toast.makeText(requireContext(), "আসমাউল হুসনা", Toast.LENGTH_SHORT).show()
+        }
+
         // 📚 লাইভ অনলাইন বই
         binding.cardOnlineBooks.setOnClickListener {
             parentFragmentManager.beginTransaction()

@@ -16,13 +16,14 @@
             android:id="@+id/namazCountdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ফজরের নামাজ শুরু হতে বাকি ৩৫ মিনিট"
-            android:textSize="16sp"
+            android:text="সহীহ্ তা’লীমুল কুরআন ফাউন্ডেশন\n অ্যাপে আপনাকে স্বাগতম"
+            android:textSize="22sp"
             android:textColor="#FFFFFF"
             android:padding="16dp"
             android:fontFamily="@font/kalpurush"
             android:background="#00796B"
             android:gravity="center"
+
             android:layout_marginBottom="12dp" />
 
         <!-- 🔳 Grid of Dashboard Cards -->
@@ -33,6 +34,7 @@
             android:useDefaultMargins="true"
             android:alignmentMode="alignMargins"
             android:columnOrderPreserved="false"
+            android:layout_marginTop="15dp"
             android:padding="8dp">
 
             <!-- তোর সব কার্ড গুলো একদম আগের মতোই নিচে রইলো -->
